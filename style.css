@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: rgb(121, 118, 194);
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: rgb(121, 118, 194);
+    color: white;
+}
+
+button {
+    background-color: rgb(121, 118, 194);
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(230, 236, 255);
+    color:  rgb(121, 118, 194);
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Activity</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Lab Activity</h1>
+        <hr>
+    </header>
+    <form action="update.php" method="POST" id="dataTableForm">
+        <fieldset>
+            <button type="button" onclick="goToCreate()">Create</button>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Title</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be inserted here using JavaScript -->
+                </tbody>
+            </table>
+        </fieldset>
+        <!-- Hidden input field to store entry ID when editing or deleting -->
+        <input type="hidden" name="edit" id="edit">
+    </form>
+
+    <script>
+        // Function to redirect to create.php
+        function goToCreate() {
+            // Set the form action to create.php
+            document.getElementById('dataTableForm').action = 'create.php';
+
+            // Submit the form
+            document.getElementById('dataTableForm').submit();
+        }
+
+        // Function to redirect to update.php for editing
+        function editEntry(entryId) {
+            // Set the form action to update.php
+            document.getElementById('dataTableForm').action = 'update.php';
+
+            // Create a hidden input for the edit ID
+            const editInput = document.createElement('input');
+            editInput.type = 'hidden';
+            editInput.name = 'edit';
+            editInput.value = entryId;
+
+            // Append the hidden input to the form
+            document.getElementById('dataTableForm').appendChild(editInput);
+
+            // Submit the form
+            document.getElementById('dataTableForm').submit();
+        }
+
+        // Function to dynamically populate the ID and redirect to delete.php for deleting
+        function deleteEntry(entryId) {
+            // Set the form action to delete.php
+            document.getElementById('dataTableForm').action = 'delete.php';
+
+            // Create a hidden input for the delete ID
+            const deleteInput = document.createElement('input');
+            deleteInput.type = 'hidden';
+            deleteInput.name = 'id';
+            deleteInput.value = entryId;
+
+            // Append the hidden input to the form
+            document.getElementById('dataTableForm').appendChild(deleteInput);
+
+            // Set the edit input for consistency (optional)
+            document.querySelector('input[name="edit"]').value = entryId;
+
+            // Submit the form
+            document.getElementById('dataTableForm').submit();
+        }
+
+        // Function to fetch and display data
+        function fetchData() {
+            fetch('display.php')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#dataTable tbody');
+                    tableBody.innerHTML = ''; // Clear existing rows
+
+                    data.forEach(entry => {
+                        const row = tableBody.insertRow();
+
+                        // Add a cell for the entry ID
+                        const idCell = row.insertCell();
+                        idCell.textContent = entry.id;
+
+                        // Add cells for other entry data (excluding ID)
+                        const dataKeys = Object.keys(entry);
+                        dataKeys.forEach(key => {
+                            if (key !== 'id') {
+                                const cell = row.insertCell();
+                                cell.textContent = entry[key];
+                            }
+                        });
+
+                        // Add edit and delete buttons in the same cell
+                        const actionsCell = row.insertCell();
+                        actionsCell.innerHTML = `<button onclick="editEntry(${entry.id})">Edit</button>` +
+                            `<button onclick="deleteEntry(${entry.id})">Delete</button>`;
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Call the fetch function when the page loads
+        fetchData();
+    </script>
+
+</body>
+
+</html>
